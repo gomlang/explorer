@@ -425,7 +425,7 @@ fn explorer_theme() -> Result[tui::Theme, tui::Error] {
 }
 
 pub fn demo_markdown() -> string {
-    "# GoML terminal ecosystem\n\nA **read-only explorer** composed from GoML libraries.\n\n- Unicode: 中文 and 👩‍💻\n- A shared terminal session owns the screen.\n- Scans run in a bounded background worker.\n\n## Shortcuts\n\n| Key | Action |\n| --- | --- |\n| Tab | Switch pane |\n| r | Refresh tree |\n| q | Quit safely |\n\n> Root changes trigger a fresh scan.\n\n```gom\nuse ecosystem::tui;\n```\n\n[GoML documentation](https://example.invalid/goml)\n"
+    "# GoML terminal ecosystem\n\nA **read-only explorer** composed from GoML libraries.\n\n- Unicode: 中文 and 👩‍💻\n- A shared terminal session owns the screen.\n- Scans run in a bounded background worker.\n\n## Shortcuts\n\n| Key | Action |\n| --- | --- |\n| Tab | Switch pane |\n| r | Refresh tree |\n| q | Quit safely |\n\n> Root changes trigger a fresh scan.\n\n```goml\nuse ecosystem::tui;\n```\n\n[GoML documentation](https://example.invalid/goml)\n"
 }
 
 pub fn demo() -> Result[Explorer, string] {
@@ -441,8 +441,8 @@ pub fn demo() -> Result[Explorer, string] {
             },
             Entry { path: "demo/src", name: "src", depth: 1, kind: Kind::Directory, bytes: 0 },
             Entry {
-                path: "demo/src/main.gom",
-                name: "main.gom",
+                path: "demo/src/main.goml",
+                name: "main.goml",
                 depth: 2,
                 kind: Kind::File,
                 bytes: 128,
