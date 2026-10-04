@@ -223,7 +223,14 @@ impl Explorer {
     pub fn update(self: Explorer, event: terminal::Event, rows: isize) -> Result[Explorer, string] {
         if let terminal::Event::Key(key) = event {
             if key.code == terminal::KeyCode::Tab || key.code == terminal::KeyCode::BackTab {
-                return Result::Ok(Explorer { focus_preview: !self.focus_preview, ..self });
+                let focus_preview = !self.focus_preview;
+                let selection = tui::SelectionState {
+                    focused: !focus_preview,
+                    ..self.tree.selection,
+                };
+                return Result::Ok(
+                    Explorer { focus_preview, tree: self.tree.with_selection(selection), ..self },
+                );
             }
             if key.code == terminal::KeyCode::Char('r') {
                 return Result::Ok(self.request_refresh(false));

@@ -3,6 +3,7 @@ package tests;
 use example::explorer;
 use ecosystem::tempfile;
 use ecosystem::terminal;
+use ecosystem::tui;
 use std::bytes;
 use std::fs;
 use std::task;
@@ -244,4 +245,38 @@ fn refresh_preserves_selected_path_and_missing_roots_report_errors() -> () {
     );
     testing::assert_eq(missing.entries.len(), 0);
     testing::assert(!missing.summary.errors.is_empty());
+}
+
+#[test]
+fn pane_focus_updates_do_not_require_an_intermediate_draw_for_navigation() -> () {
+    for toggle in[terminal::KeyCode::Tab, terminal::KeyCode::BackTab] {
+        for redraw in[false, true] {
+            let state = testing::expect_ok(explorer::demo(), "demo");
+            let state = testing::expect_ok(state.update(key(toggle), 20), "preview focus");
+            let buffer = testing::expect_ok(tui::Buffer::new(100, 28), "buffer");
+            let state = testing::expect_ok(state.draw(buffer), "draw preview focus");
+            let state = testing::expect_ok(state.update(key(toggle), 20), "tree focus");
+            let state = if redraw {
+                testing::expect_ok(state.draw(buffer), "optional intermediate draw")
+            } else {
+                state
+            };
+            let state = testing::expect_ok(
+                state.update(key(terminal::KeyCode::Down), 20),
+                "navigate tree",
+            );
+            testing::assert_eq(state.selected_path(), "demo/src");
+            testing::assert(
+                testing::expect_ok(explorer::snapshot(state, 100, 28), "new selection").contains(
+                    "Select README.md to preview",
+                ),
+            );
+            let state = testing::expect_ok(state.update(key(toggle), 20), "preview again");
+            let state = testing::expect_ok(
+                state.update(key(terminal::KeyCode::Down), 20),
+                "scroll preview",
+            );
+            testing::assert_eq(state.selected_path(), "demo/src");
+        }
+    }
 }
