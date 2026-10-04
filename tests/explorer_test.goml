@@ -130,6 +130,29 @@ fn regular_file_preview_is_bounded_utf8_checked_and_rejects_replaced_links() -> 
 }
 
 #[test]
+fn preview_uses_current_file_size_after_a_scanned_file_shrinks() -> () {
+    let directory = testing::expect_ok(tempfile::tempdir(), "directory");
+    defer {
+        let _ = directory.close();
+    };
+    let root = directory.path();
+    let path = root + "/README.md";
+    testing::assert_ok(fs::write_file_structured(path, "x".repeat(64)));
+    let scanned = testing::expect_ok(explorer::scan_now(root, explorer::Limits::defaults()), "scan");
+    let entry = scanned.entries[1];
+    testing::assert_eq(entry.bytes, 64);
+    let limits = explorer::Limits { max_file_bytes: 32, ..explorer::Limits::defaults() };
+    testing::assert(explorer::read_preview(entry, limits).is_err());
+    testing::assert_ok(fs::write_file_structured(path, "# Now small\n"));
+    testing::assert_eq(
+        testing::expect_ok(explorer::read_preview(entry, limits), "preview after shrink"),
+        "# Now small\n",
+    );
+    testing::assert_ok(fs::write_file_structured(path, "x".repeat(64)));
+    testing::assert(explorer::read_preview(entry, limits).is_err());
+}
+
+#[test]
 fn background_worker_delivers_complete_batches_and_cancels_under_backpressure() -> () {
     let directory = testing::expect_ok(tempfile::tempdir(), "directory");
     defer {

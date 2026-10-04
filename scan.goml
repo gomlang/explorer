@@ -223,9 +223,6 @@ pub fn read_preview(entry: Entry, limits: Limits) -> Result[string, string] {
     if entry.kind != Kind::File {
         return Result::Err("Preview accepts regular files only; symbolic links are not followed.");
     }
-    if entry.bytes > limits.max_file_bytes.to_i64() {
-        return Result::Err(f"Preview exceeds the {limits.max_file_bytes}-byte limit.");
-    }
     let file = fd::open(
         entry.path,
         fd::O_RDONLY | fd::O_CLOEXEC | fd::O_NOFOLLOW | fd::O_NONBLOCK,
