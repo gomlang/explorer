@@ -8,7 +8,7 @@ This is an application example with module path `example::explorer`, not a publi
 
 ## Build and run
 
-Build from the sibling verification repository, then run the example:
+Build from the sibling workflows repository, then run the example:
 
 ```sh
 cd ~/git/gomlang/workflows
