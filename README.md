@@ -1,6 +1,8 @@
 # Explorer integration example
 
-A read-only, two-pane terminal file browser written in GoML. It combines `walkdir`, `notify`, `terminal`, `tui`, `ansi`, `color`, `progress`, and `tui_markdown` through ordinary versioned dependencies. The left pane shows an expanded directory tree; the right pane previews the selected Markdown file. Scans run on one background task and report bounded batches to the event loop.
+Requires a current GoML toolchain supporting unversioned registry dependencies; see [the pinned ecosystem toolchain](https://github.com/gomlang/verification/blob/main/ci/toolchain.json).
+
+A read-only, two-pane terminal file browser written in GoML. It combines `walkdir`, `notify`, `terminal`, `tui`, `ansi`, `color`, `progress`, and `tui_markdown` through ordinary unversioned dependencies. The left pane shows an expanded directory tree; the right pane previews the selected Markdown file. Scans run on one background task and report bounded batches to the event loop.
 
 This is an application example with module path `example::explorer`, not a published ecosystem library or an entry in the shared library verifier's `MODULES` list.
 
@@ -61,6 +63,9 @@ The HTML dependency includes a managed Go adapter for document parsing and
 sanitization. Projects using this module need a module-root `go.mod`, even when
 they use only the existing text APIs. A minimal Go module with `go 1.26.0` is
 sufficient; GoML generates the adapter requirements and replacements. This
-repository includes that manifest. Fetch the declared native Go dependencies
-before building with readonly module resolution; ecosystem verification and CI
-do this automatically.
+repository includes that manifest. CI prepares the declared native Go dependencies.
+Before local verification, fetch them from this repository root:
+
+```sh
+python3 ../verification/ci/ecosystem.py native --libraries .. --module explorer
+```
