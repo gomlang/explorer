@@ -1,6 +1,6 @@
 # Explorer integration example
 
-Requires a current GoML toolchain supporting unversioned registry dependencies; see [the pinned ecosystem toolchain](https://github.com/gomlang/verification/blob/main/ci/toolchain.json).
+Requires a current GoML toolchain supporting unversioned registry dependencies; see [the pinned ecosystem toolchain](https://github.com/gomlang/workflows/blob/main/ci/toolchain.json).
 
 A read-only, two-pane terminal file browser written in GoML. It combines `walkdir`, `notify`, `terminal`, `tui`, `ansi`, `color`, `progress`, and `tui_markdown` through ordinary unversioned dependencies. The left pane shows an expanded directory tree; the right pane previews the selected Markdown file. Scans run on one background task and report bounded batches to the event loop.
 
@@ -11,14 +11,14 @@ This is an application example with module path `example::explorer`, not a publi
 Build from the sibling verification repository, then run the example:
 
 ```sh
-cd ~/git/gomlang/verification
+cd ~/git/gomlang/workflows
 just ecosystem-test explorer
 cd ../explorer
 _artifact/bin/explorer .
 _artifact/bin/explorer --snapshot
 ```
 
-The verifier builds against a private registry snapshot from the sibling `verification` repository; it does not publish packages or alter the user's registry. `--demo` is an alias for the built-in snapshot. Snapshots are 100 columns by 28 rows, plain text without terminal escapes. Interactive mode requires Linux amd64 and a real terminal; `--help` works without a terminal.
+The verifier builds against a private registry snapshot from the sibling `workflows` repository; it does not publish packages or alter the user's registry. `--demo` is an alias for the built-in snapshot. Snapshots are 100 columns by 28 rows, plain text without terminal escapes. Interactive mode requires Linux amd64 and a real terminal; `--help` works without a terminal.
 
 ## Controls
 
@@ -53,7 +53,7 @@ Traversal never follows directory symlinks, and interactive mode rejects a symli
 
 ## Verification
 
-`just ecosystem-test explorer` from the verification repository checks formatting, application tests, normal and cached builds, repeatable built-in snapshots, real PTY interaction, and the same tests under Go's race detector. Each run retains its logs and original `report.json` under `../verification/_artifact/verification/runs/run-.../`; the report's `run_directory` and command `log` fields identify the exact paths. `../verification/_artifact/verification/report.json` is the latest report copy, or set `GOML_VERIFY_REPORT` to choose another copy path.
+`just ecosystem-test explorer` from the workflows repository checks formatting, application tests, normal and cached builds, repeatable built-in snapshots, real PTY interaction, and the same tests under Go's race detector. Each run retains its logs and original `report.json` under `../workflows/_artifact/verification/runs/run-.../`; the report's `run_directory` and command `log` fields identify the exact paths. `../workflows/_artifact/verification/report.json` is the latest report copy, or set `GOML_VERIFY_REPORT` to choose another copy path.
 
 The PTY test uses an isolated temporary tree and a small screen model. It verifies background scan completion, ignored directories, root-file modification/create/delete notifications, selection, Markdown scrolling, manual refresh, resize, read-only behavior and restoration of termios, descriptor flags, cursor and alternate-screen state. The application tests also cover entry/depth bounds, symlink pruning, invalid UTF-8, oversized previews, replacement by a symlink, selection retention, missing roots, and cancellation while the worker is blocked on a full result channel.
 
@@ -67,5 +67,5 @@ repository includes that manifest. CI prepares the declared native Go dependenci
 Before local verification, fetch them from this repository root:
 
 ```sh
-python3 ../verification/ci/ecosystem.py native --libraries .. --module explorer
+python3 ../workflows/ci/ecosystem.py native --libraries .. --module explorer
 ```
