@@ -57,15 +57,5 @@ Traversal never follows directory symlinks, and interactive mode rejects a symli
 
 The PTY test uses an isolated temporary tree and a small screen model. It verifies background scan completion, ignored directories, root-file modification/create/delete notifications, selection, Markdown scrolling, manual refresh, resize, read-only behavior and restoration of termios, descriptor flags, cursor and alternate-screen state. The application tests also cover entry/depth bounds, symlink pruning, invalid UTF-8, oversized previews, replacement by a symlink, selection retention, missing roots, and cancellation while the worker is blocked on a full result channel.
 
-## Native dependency setup
-
-The HTML dependency includes a managed Go adapter for document parsing and
-sanitization. Projects using this module need a module-root `go.mod`, even when
-they use only the existing text APIs. A minimal Go module with `go 1.26.0` is
-sufficient; GoML generates the adapter requirements and replacements. This
-repository includes that manifest. CI prepares the declared native Go dependencies.
-Before local verification, fetch them from this repository root:
-
-```sh
-python3 ../workflows/ci/ecosystem.py native --libraries .. --module explorer
-```
+The Markdown and HTML dependencies are implemented in GoML. Consumers need no
+native adapter setup or module-root `go.mod`.
